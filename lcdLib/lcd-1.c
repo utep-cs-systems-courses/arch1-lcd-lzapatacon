@@ -17,8 +17,18 @@ main()
 
   short col = 30, row = 30;
   short startc = SHORT_EDGE_PIXELS/2, startr = LONG_EDGE_PIXELS/2, lc = SHORT_EDGE_PIXELS/4;
-  int i = 0;
-  for(int c = 0; c <= 45; c++)
+  // int c = 0;
+  /*
+  for(int k = 0; k <= 45; k+=2)
+    {
+      for(int j = 0; j <= 45 - c; j++)
+	{
+	  drawPixel(startc+j, startr-k, COLOR_RED);
+	  drawPixel(startc-j, startr+k, COLOR_RED);
+	}
+      c += 1;
+      }*/
+  /* for(int c = 0; c <= 45; c++)
     {
       drawPixel(startc, startr+c, COLOR_RED);
       drawPixel(startc, startr-c, COLOR_RED);
@@ -28,10 +38,10 @@ main()
       drawPixel(startc-c, startr+c, COLOR_RED);
       drawPixel(startc-c, startr-c, COLOR_RED);
       drawPixel(startc+c, startr+c, COLOR_RED);
-      drawPixel(startc+c, startr-i, COLOR_RED);
+      //  drawPixel(startc+c, startr-i, COLOR_RED);
     }
   int c = 0;
-  for(int k = 0; k <= 45; k+=2)
+  for(int k = 0; k <= 30; k+=2)
     {
       drawPixel(startc+c, startr-k, COLOR_RED);
       drawPixel(startc-c, startr+k, COLOR_RED);
@@ -42,9 +52,8 @@ main()
       drawPixel(startc-k, startr-c, COLOR_RED);
       drawPixel(startc+k, startr+c, COLOR_RED);
       c+=1;
-    }
+      }*/
   //Makes a filled in diamond
-  /*
   for(int append = 0; append <= 30; append++)
     {
       for(int j = 0;j <= 30-append; j++)
@@ -54,7 +63,8 @@ main()
 	  drawPixel(startc-j, startr+append,COLOR_RED);
 	  drawPixel(startc+j, startr+append,COLOR_RED);
 	}
-	}*/
+    }
+  fillRectangle(startc-22,startr-22, 44,44, COLOR_RED);
   /*For loop to make filled hourglass
   for(int c = 0; c <= 60; c++)
     {
