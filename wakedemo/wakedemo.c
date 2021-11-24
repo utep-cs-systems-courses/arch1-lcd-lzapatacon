@@ -76,7 +76,7 @@ void main()
   enableWDTInterrupts();      /**< enable periodic interrupt */
   or_sr(0x8);	              /**< GIE (enable interrupts) */
   
-  clearScreen(COLOR_BLUE);
+  clearScreen(COLOR_RED);
   while (1) {			/* forever */
     if (redrawScreen) {
       redrawScreen = 0;
@@ -93,17 +93,17 @@ void main()
 void
 update_shape()
 {
-  static unsigned char row = screenHeight / 2, col = screenWidth / 2;
+  static unsigned char row = (screenHeight / 2), col = (screenWidth / 2);
   static char blue = 31, green = 0, red = 31;
   static unsigned char step = 0;
   if (switches & SW4) return;
-  if (step <= 35) {
-    int startCol = col - step;
-    int endCol = col + step;
+  if (step <= 30) {
+    int startCol = (col - step);
+    int endCol = (col + step);
     int width = 1 + endCol - startCol;
     // a color in this BGR encoding is BBBB BGGG GGGR RRRR
-    unsigned int color = (blue << 11) | (green << 5) | red;
-    for (int i = 0; i < 35 - step; i++)
+    unsigned int color = COLOR_BLACK;
+    for (int i = 0; i < 30 - step; i++)
       {
 	drawPixel(startCol-i, row-step, color);
 	drawPixel(startCol+i, row-step, color);
@@ -116,12 +116,17 @@ update_shape()
       }
     //fillRectangle(startCol, row, width, 1, color);
     //fillRectangle(startCol, row+step, width, 1, color);
-    if (switches & SW3) green = (green + 1) % 64;
-    if (switches & SW2) blue = (blue + 2) % 32;
-    if (switches & SW1) red = (red - 3) % 32;
+    if (switches & SW1) clearScreen(COLOR_RED);
+    if (switches & SW2)
+      {
+	drawString5x7(50, 20, "Black",COLOR_BLACK,COLOR_RED);
+      }
+    if (switches & SW3)
+      {
+	drawString5x7(50,130,"Widow",COLOR_BLACK,COLOR_RED);
+      }
     step ++;
   } else {
-     clearScreen(COLOR_BLUE);
      step = 0;
   }
 }
