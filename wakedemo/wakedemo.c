@@ -80,6 +80,7 @@ void main()
   while (1) {			/* forever */
     if (redrawScreen) {
       redrawScreen = 0;
+      
       update_shape();
     }
     P1OUT &= ~LED;	/* led off */
@@ -96,13 +97,26 @@ update_shape()
   static unsigned char row = (screenHeight / 2), col = (screenWidth / 2);
   static char blue = 31, green = 0, red = 31;
   static unsigned char step = 0;
-  if (switches & SW4) return;
   if (step <= 30) {
     int startCol = (col - step);
     int endCol = (col + step);
     int width = 1 + endCol - startCol;
     // a color in this BGR encoding is BBBB BGGG GGGR RRRR
-    unsigned int color = COLOR_BLACK;
+    
+    unsigned int color;
+    unsigned int color2;
+    if (switches & SW4)
+      {
+	clearScreen(COLOR_BLACK);
+	color = COLOR_RED;
+	color2 = COLOR_BLACK;
+      }
+    if(switches && SW1)
+      {
+	clearScreen(COLOR_RED);
+	color = COLOR_BLACK;
+	color2 = COLOR_RED;	
+      }
     for (int i = 0; i < 30 - step; i++)
       {
 	drawPixel(startCol-i, row-step, color);
@@ -116,21 +130,19 @@ update_shape()
       }
     //fillRectangle(startCol, row, width, 1, color);
     //fillRectangle(startCol, row+step, width, 1, color);
-    if (switches & SW1) clearScreen(COLOR_RED);
     if (switches & SW2)
       {
-	drawString5x7(50, 20, "Black",COLOR_BLACK,COLOR_RED);
+	drawVerString5x7(50, 20, "Black",color,color2);
       }
     if (switches & SW3)
       {
-	drawString5x7(50,130,"Widow",COLOR_BLACK,COLOR_RED);
+	drawVerString5x7(50,130,"Widow",color,color2);
       }
     step ++;
   } else {
      step = 0;
   }
 }
-
 
 /* Switch on S2 */
 void
