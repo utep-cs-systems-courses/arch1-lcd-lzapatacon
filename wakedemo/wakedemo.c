@@ -2,6 +2,8 @@
 #include <libTimer.h>
 #include "lcdutils.h"
 #include "lcddraw.h"
+#include "buzzer.h"
+#include "song.h"
 
 // WARNING: LCD DISPLAY USES P1.0.  Do not touch!!! 
 
@@ -13,6 +15,9 @@
 #define SW4 8
 
 #define SWITCHES 15
+
+#define s_state 1;
+#define period 1;
 
 static char 
 switch_update_interrupt_sense()
@@ -78,13 +83,14 @@ void main()
   
   clearScreen(COLOR_RED);
   while (1) {			/* forever */
-    if (redrawScreen) {
+    /*if (redrawScreen) {
       redrawScreen = 0;
       
       update_shape();
-    }
+      }*/
+    update_shape();
     P1OUT &= ~LED;	/* led off */
-    or_sr(0x10);	/**< CPU OFF */
+    //or_sr(0x10);	/**< CPU OFF */
     P1OUT |= LED;	/* led on */
   }
 }
@@ -103,20 +109,19 @@ update_shape()
     int width = 1 + endCol - startCol;
     // a color in this BGR encoding is BBBB BGGG GGGR RRRR
     
-    unsigned int color;
-    unsigned int color2;
+    unsigned int color = COLOR_RED;
+    unsigned int color2 = COLOR_BLACK;
     if (switches & SW4)
       {
 	clearScreen(COLOR_BLACK);
-	color = COLOR_RED;
-	color2 = COLOR_BLACK;
+     
       }
-    if(switches && SW1)
+    /*if(switches && SW1)
       {
 	clearScreen(COLOR_RED);
 	color = COLOR_BLACK;
 	color2 = COLOR_RED;	
-      }
+      }*/
     for (int i = 0; i < 30 - step; i++)
       {
 	drawPixel(startCol-i, row-step, color);
@@ -132,11 +137,12 @@ update_shape()
     //fillRectangle(startCol, row+step, width, 1, color);
     if (switches & SW2)
       {
-	drawVerString5x7(50, 20, "Black",color,color2);
+	drawVerString11x16(35, 20, "Black",COLOR_RED,COLOR_BLACK);
+	song();
       }
     if (switches & SW3)
       {
-	drawVerString5x7(50,130,"Widow",color,color2);
+	drawVerString11x16(35,130,"Widow",COLOR_RED,COLOR_BLACK);
       }
     step ++;
   } else {
