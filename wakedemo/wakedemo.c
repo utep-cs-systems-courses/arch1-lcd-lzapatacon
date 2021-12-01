@@ -83,19 +83,21 @@ void main()
   
   clearScreen(COLOR_RED);
   while (1) {			/* forever */
-    /*if (redrawScreen) {
+    if (redrawScreen) {
       redrawScreen = 0;
       
       update_shape();
-      }*/
-    update_shape();
+      }
+    //update_shape();
     P1OUT &= ~LED;	/* led off */
-    //or_sr(0x10);	/**< CPU OFF */
+    or_sr(0x10);	/**< CPU OFF */
     P1OUT |= LED;	/* led on */
   }
 }
 
     
+    unsigned int color = COLOR_RED;
+    unsigned int color2 = COLOR_BLACK; 
     
 void
 update_shape()
@@ -103,25 +105,26 @@ update_shape()
   static unsigned char row = (screenHeight / 2), col = (screenWidth / 2);
   static char blue = 31, green = 0, red = 31;
   static unsigned char step = 0;
-  if (step <= 30) {
-    int startCol = (col - step);
-    int endCol = (col + step);
-    int width = 1 + endCol - startCol;
     // a color in this BGR encoding is BBBB BGGG GGGR RRRR
-    
-    unsigned int color = COLOR_RED;
-    unsigned int color2 = COLOR_BLACK;
+   
     if (switches & SW4)
       {
 	clearScreen(COLOR_BLACK);
+	color = COLOR_RED;
+	color2 = COLOR_BLACK;
      
       }
-    /*if(switches && SW1)
+    if(switches & SW1)
       {
 	clearScreen(COLOR_RED);
 	color = COLOR_BLACK;
 	color2 = COLOR_RED;	
-      }*/
+      }
+    for (int step = 0; step <= 30; step++) {
+      
+    int startCol = (col - step);
+    int endCol = (col + step);
+    int width = 1 + endCol - startCol;
     for (int i = 0; i < 30 - step; i++)
       {
 	drawPixel(startCol-i, row-step, color);
@@ -130,24 +133,28 @@ update_shape()
 	drawPixel(startCol+i, row+step, color);
 	drawPixel(endCol-i, row-step, color);
 	drawPixel(endCol+i, row-step, color);
-	drawPixel(endCol-i, row+step, color);
+x	drawPixel(endCol-i, row+step, color);
 	drawPixel(endCol+i, row+step, color);
       }
+    }
     //fillRectangle(startCol, row, width, 1, color);
     //fillRectangle(startCol, row+step, width, 1, color);
     if (switches & SW2)
       {
-	drawVerString11x16(35, 20, "Black",COLOR_RED,COLOR_BLACK);
-	song();
+	drawVerString11x16(35, 20, "Black",color,color2);
+	//song(2);
       }
     if (switches & SW3)
       {
-	drawVerString11x16(35,130,"Widow",COLOR_RED,COLOR_BLACK);
+	drawVerString11x16(35,130,"Widow",color,color2);
+	//song(3);
       }
-    step ++;
+    //step ++;
+    /**
   } else {
      step = 0;
   }
+    */
 }
 
 /* Switch on S2 */
