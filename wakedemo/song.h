@@ -3,4 +3,7 @@
 
 void song();
 
+extern int period;
+extern char s_state;
+
 #endif

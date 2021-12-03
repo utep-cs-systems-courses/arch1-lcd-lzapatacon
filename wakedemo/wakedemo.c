@@ -16,8 +16,8 @@
 
 #define SWITCHES 15
 
-#define s_state 1;
-#define period 1;
+int period = 100;
+char s_state = 0;
 
 static char 
 switch_update_interrupt_sense()
@@ -80,7 +80,6 @@ void main()
   
   enableWDTInterrupts();      /**< enable periodic interrupt */
   or_sr(0x8);	              /**< GIE (enable interrupts) */
-  
   clearScreen(COLOR_RED);
   while (1) {			/* forever */
     if (redrawScreen) {
@@ -93,11 +92,9 @@ void main()
     or_sr(0x10);	/**< CPU OFF */
     P1OUT |= LED;	/* led on */
   }
-}
-
-    
-    unsigned int color = COLOR_RED;
-    unsigned int color2 = COLOR_BLACK; 
+}   
+unsigned int color = COLOR_RED;
+unsigned int color2 = COLOR_BLACK; 
     
 void
 update_shape()
@@ -106,13 +103,13 @@ update_shape()
   static char blue = 31, green = 0, red = 31;
   static unsigned char step = 0;
     // a color in this BGR encoding is BBBB BGGG GGGR RRRR
-   
+  
     if (switches & SW4)
       {
 	clearScreen(COLOR_BLACK);
 	color = COLOR_RED;
 	color2 = COLOR_BLACK;
-     
+	buzzer_set_period(0);
       }
     if(switches & SW1)
       {
@@ -133,7 +130,7 @@ update_shape()
 	drawPixel(startCol+i, row+step, color);
 	drawPixel(endCol-i, row-step, color);
 	drawPixel(endCol+i, row-step, color);
-x	drawPixel(endCol-i, row+step, color);
+	drawPixel(endCol-i, row+step, color);
 	drawPixel(endCol+i, row+step, color);
       }
     }
@@ -142,12 +139,12 @@ x	drawPixel(endCol-i, row+step, color);
     if (switches & SW2)
       {
 	drawVerString11x16(35, 20, "Black",color,color2);
-	//song(2);
+	song();
       }
     if (switches & SW3)
       {
 	drawVerString11x16(35,130,"Widow",color,color2);
-	//song(3);
+	song();
       }
     //step ++;
     /**
